@@ -1,0 +1,24 @@
+[
+{
+  "modid": "SmoothBedrock",
+  "name": "Smooth Bedrock",
+  "description": "Smooths out those annoying bumps of Bedrock.
+
+These will be replaced with high probability by stone or lava.
+There is a minimal chance of a diamond.",
+  "version": "@VERSION@",
+  "mcversion": "@MC_VERSION@",
+  "url": "http://tinyurl.com/qb9c8pt",
+  "updateUrl": "",
+  "authors": [
+    "Samtrion"
+  ],
+  "credits": "",
+  "logoFile": "/assets/smoothbedrock/logo.png",
+  "screenshots": [
+  ],
+  "parent" : "",
+  "dependencies": [
+  ]
+}
+]

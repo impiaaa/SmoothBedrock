@@ -1,0 +1,125 @@
+<project name="SmoothBedrock" default="main">
+	
+<!-- Begin Properties -->
+<!-- version properties -->
+	<property file="version.properties" />
+    <propertyfile file="version.properties">
+        <entry key="version.revision" type="int" operation="+" value="1" pattern="00" />
+    </propertyfile>
+	<property name="version.info"  value="${version.major}.${version.minor}.${version.build}" />
+	
+<!-- timestamp -->
+    <tstamp>
+    	<format property="current.time" pattern="yyyyMMdd_HHmmss" />
+    </tstamp>
+	
+<!-- path properties -->
+	<dirname property="basedir"    file="${ant.file.$${ant.project.name}}"/>
+	<property name="src.dir"       value="${basedir}"/>
+	<property name="res.dir"       value="${basedir}\resources" />
+	<property name="lang.dir"      value="${basedir}\..\${ant.project.name}-Localization" />
+	
+	<property name="builds.dir"        value=".\..\..\Builds\${ant.project.name}" />
+	<property name="downloads.dir"     value=".\..\..\Downloads" />
+	<property name="classes.dir"       value="${builds.dir}\obf" />
+	
+	<property name="project.dir"       value="dronecraft" />
+	<property name="mc.version"        value="1.6.4" />
+	<property name="forge.version"     value="9.11.1.916" />
+	<property name="forge.name"        value="minecraftforge-src-${mc.version}-${forge.version}.zip" />
+	<property name="forge.dir"         value=".\..\..\Forge\${mc.version}-${forge.version}" />
+<!-- End Properties -->
+
+<!-- Begin Conditions -->
+	<condition property="python.exe" value="${forge.dir}/mcp/runtime/bin/python/python_mcp" else="python">
+		<os family="Windows" />
+	</condition>
+	
+	<available property="forge-zip-exists" file="${downloads.dir}/${forge.name}"/>
+	<available property="forge-mcp-exists" file="${forge.dir}" type="dir" />
+<!-- End Conditions -->
+	    
+<!-- Begin Targets -->
+	<target name="info">
+		<echo>Starting build for ${ant.project.name} - ${version.info} (${version.revision})</echo>
+	</target>
+	
+    <target name="download-forge" unless="forge-zip-exists">
+        <get src="http://files.minecraftforge.net/minecraftforge/${forge.name}" dest="${downloads.dir}" usetimestamp="True"/>
+    </target>
+	
+    <target name="download-files" depends="download-forge" />
+	
+	<target name="setup" depends="download-files" unless="forge-mcp-exists">
+		<unzip dest="${forge.dir}" src="${downloads.dir}/${forge.name}" />
+		<move todir="${forge.dir}">
+			<fileset dir="${forge.dir}/forge" />
+		</move>
+
+		<exec dir="${forge.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c install.cmd"/>
+		</exec>
+
+		<exec dir="${forge.dir}" executable="cmd" osfamily="unix">
+			<arg value="install.sh" />
+		</exec>
+	</target>
+	
+	<target name="prepare" depends="setup">
+		<mkdir dir="${builds.dir}"/>
+		<mkdir dir="${downloads.dir}"/>
+	</target>
+	
+	<target name="compile" depends="info, prepare">
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+		
+		<copy todir="${forge.dir}/mcp/src/minecraft">
+			<fileset dir="${src.dir}" />
+			<filterset>
+				<filter token="VERSION"   value="${version.info}.${version.revision}" />
+			</filterset>
+		</copy>
+		
+        <exec executable="${python.exe}" dir="${forge.dir}/mcp" failonerror="true">
+            <arg value="runtime/recompile.py" />
+        </exec>
+            
+        <exec executable="${python.exe}" dir="${forge.dir}/mcp" failonerror="true">
+            <arg value="runtime/reobfuscate.py" />
+            <arg value="--srgnames" />
+        </exec>
+		
+		<move todir="${classes.dir}" includeemptydirs="true" >
+			<fileset dir="${forge.dir}/mcp/reobf/minecraft" />
+		</move>
+		
+		<mkdir dir="${forge.dir}/mcp/reobf/minecraft" />
+		
+		<copy todir="${classes.dir}" includeemptydirs="true"  verbose="true">
+			<fileset dir="${res.dir}">
+				<exclude name="**/logos/**" />
+			</fileset>
+			<filterset>
+				<filter token="VERSION"   value="${version.info}.${version.revision}" />
+				<filter token="MC_VERSION"     value="${mc.version}" />
+			</filterset>
+		</copy>
+		
+		<copy todir="${classes.dir}\lang" includeemptydirs="true" verbose="true" failonerror="false">
+			<fileset dir="${lang.dir}\lang" excludes="en_US*" />
+		</copy>
+	</target>
+	
+	<target name="obfuscate" depends="compile">
+	</target>
+	
+	<target name="main" depends="compile, obfuscate">
+		<delete file="${builds.dir}/${ant.project.name}-${mc.version}-${version.info}.jar" />
+		<jar destfile="${builds.dir}/${ant.project.name}-${mc.version}-${version.info}.jar" basedir="${classes.dir}" />
+		
+		<delete dir="${classes.dir}" />
+		<delete dir="${forge.dir}/mcp/src/Minecraft/${ant.project.name}" />
+		<delete dir="${forge.dir}/mcp/src/Minecraft/src" />
+	</target>
+</project>
