@@ -5,6 +5,7 @@ import smoothbedrock.common.SBPacketHandler;
 import smoothbedrock.common.SBServerProxy;
 import smoothbedrock.worldgeneration.SBWorldGeneration;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -46,14 +47,18 @@ public class SBCore {
 
 	@EventHandler
 	public void onInitializationEvent(FMLInitializationEvent e) {
-		if (SBConfig.isActive()) {
-			GameRegistry.registerWorldGenerator(new SBWorldGeneration());
+		if (SBConfig.usedForProjectRed) {
+			SBConfig.isProjectRedDetected = Loader.isModLoaded("ProjRed|Exploration")
+					|| Loader.isModLoaded("ProjRed|Core");
 		}
+
+		if (SBConfig.isActive)
+			GameRegistry.registerWorldGenerator(new SBWorldGeneration());
 	}
 
 	@EventHandler
 	public void onServerStartingEvent(FMLServerStartingEvent event) {
-		SBConfig.Log.info("Register SBRetroCommand");
-		event.registerServerCommand(new SBRetroCommand());
+		if (SBConfig.isActive)
+			event.registerServerCommand(new SBRetroCommand());
 	}
 }

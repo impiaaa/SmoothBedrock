@@ -10,95 +10,49 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 
 public class SBConfig {
-
-	private static boolean _isActive;
-
-	public static boolean isActive() {
-		return _isActive;
-	}
-
-	private static boolean _spawnDiamonds;
-
-	public static boolean spawnDiamonds() {
-		return _spawnDiamonds;
-	}
-
-	private static boolean _spawnLava;
-
-	public static boolean spawnLava() {
-		return _spawnLava;
-	}
-
-	private static boolean _spawnRedstone;
-
-	public static boolean spawnRedstone() {
-		return _spawnRedstone;
-	}
-
-	private static boolean _spawnLapis;
-
-	public static boolean spawnLapis() {
-		return _spawnLapis;
-	}
-
-	private static boolean _usedForNether;
-
-	public static boolean usedForNether() {
-		return _usedForNether;
-	}
-
-	private static boolean _usedForTwilighForest;
-
-	public static boolean usedForTwilighForest() {
-		return _usedForTwilighForest;
-	}
-
-	private static boolean _usedForGalacticraft;
-
-	public static boolean usedForGalacticraft() {
-		return _usedForGalacticraft;
-	}
-
-	private static boolean _usedForMineDonalds;
-
-	public static boolean usedForMineDonalds() {
-		return _usedForMineDonalds;
-	}
-
-	public static boolean Debug() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+	public static boolean isActive;
+	public static boolean isProjectRedDetected = false;
+	public static boolean spawnDiamonds;
+	public static boolean spawnLava;
+	public static boolean spawnRedstone;
+	public static boolean spawnLapis;
+	public static boolean usedForNether;
+	public static boolean usedForTwilighForest;
+	public static boolean usedForGalacticraft;
+	public static boolean usedForMineDonalds;
+	public static boolean usedForProjectRed;
 
 	public static void readConfig(Configuration config) {
-		// loading / creating config
-
-		_isActive = config
-				.get("WorldGeneration", "isActive", true, "true, smooths out those annoying bumps of bedrock")
+		isActive = config.get("WorldGeneration", "isActive", true, "true, smooths out those annoying bumps of bedrock")
 				.getBoolean(true);
 
-		_usedForNether = config.get("WorldGeneration", "usedForNether", true,
+		usedForNether = config.get("WorldGeneration", "usedForNether", true,
 				"true, applies in the generation of the nether").getBoolean(true);
 
-		_usedForTwilighForest = config.get("WorldGeneration", "usedForTwilighForest", true,
+		usedForTwilighForest = config.get("WorldGeneration", "usedForTwilighForest", true,
 				"true, applies in the generation of twilight forest").getBoolean(true);
 
-		_usedForGalacticraft = config.get("WorldGeneration", "usedForGalacticraft", true,
+		usedForGalacticraft = config.get("WorldGeneration", "usedForGalacticraft", true,
 				"true, applies in the generation of Galacticcraft Dimensions").getBoolean(true);
 
-		_usedForMineDonalds = config.get("WorldGeneration", "usedForMineDonalds", true,
+		usedForMineDonalds = config.get("WorldGeneration", "usedForMineDonalds", true,
 				"true, applies in the generation of MineDonalds Dimension").getBoolean(true);
 
-		_spawnDiamonds = config.get("WorldGeneration", "spawnDiamonds", true,
+		usedForProjectRed = config
+				.get("WorldGeneration", "usedForProjectRed", true,
+						"if true, the smoothbedrock worldgeneration doesn't spawn additional lava, when ProjectRed is detected")
+				.getBoolean(true);
+
+		spawnDiamonds = config.get("WorldGeneration", "spawnDiamonds", true,
 				"true, if diamonds (very low chance) should be generated as bedrock alternative.").getBoolean(true);
 
-		_spawnLava = config.get("WorldGeneration", "spawnLava", true,
+		spawnLava = config.get("WorldGeneration", "spawnLava", true,
 				"true, if lava should be generated as bedrock alternative").getBoolean(true);
 
-		_spawnRedstone = config.get("WorldGeneration", "spawnRedstone", true,
+		spawnRedstone = config.get("WorldGeneration", "spawnRedstone", true,
 				"true, if redstone (low chance) should be generated as bedrock alternative.").getBoolean(true);
 
-		_spawnLapis = config.get("WorldGeneration", "spawnLapis", true,
+		spawnLapis = config.get("WorldGeneration", "spawnLapis", true,
 				"true, if lapis (low chance) should be generated as bedrock alternative.").getBoolean(true);
 
 	}
@@ -111,11 +65,8 @@ public class SBConfig {
 
 	public static boolean isValidDimension(World world) {
 		if (!_dimensions.containsKey(world.provider.dimensionId)) {
-			SBConfig.Log.info(String.format("Unknown Dimension detected '%s (%d)', starting analysis",
-					world.provider.getDimensionName(), world.provider.dimensionId));
-
 			if (world.provider.dimensionId == -1) {
-				_dimensions.put(-1, usedForNether());
+				_dimensions.put(-1, usedForNether);
 				_dimensionDefaultBlock.put(-1, Block.netherrack.blockID);
 				_dimensionDefaultBlockMeta.put(-1, 0);
 			} else if (world.provider.dimensionId == 0) {
@@ -129,16 +80,16 @@ public class SBConfig {
 			} else if (world.provider.getDimensionName().equalsIgnoreCase("Twilight Forest")) {
 
 				// Support for Twilight Forest
-				_dimensions.put(world.provider.dimensionId, usedForTwilighForest());
+				_dimensions.put(world.provider.dimensionId, usedForTwilighForest);
 			} else if (world.provider.getDimensionName().equalsIgnoreCase("Moon")
 					|| world.provider.getDimensionName().equalsIgnoreCase("Mars")) {
 
 				// Support for Galacticcraft
-				_dimensions.put(world.provider.dimensionId, usedForGalacticraft());
+				_dimensions.put(world.provider.dimensionId, usedForGalacticraft);
 			} else if (world.provider.getDimensionName().toLowerCase().contains("MineDonalds".toLowerCase())) {
 
 				// Support for MineDonalds
-				_dimensions.put(world.provider.dimensionId, usedForMineDonalds());
+				_dimensions.put(world.provider.dimensionId, usedForMineDonalds);
 			} else {
 
 				_dimensions.put(world.provider.dimensionId, false);

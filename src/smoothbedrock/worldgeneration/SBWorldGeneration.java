@@ -16,7 +16,7 @@ public class SBWorldGeneration implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
 			IChunkProvider chunkProvider) {
 
-		if (!SBConfig.isActive() || chunkProvider instanceof ChunkProviderFlat
+		if (!SBConfig.isActive || chunkProvider instanceof ChunkProviderFlat
 				|| world.provider.terrainType == WorldType.FLAT || !SBConfig.isValidDimension(world))
 			return;
 
@@ -55,16 +55,16 @@ public class SBWorldGeneration implements IWorldGenerator {
 					if (isBedrock(world, posX, posY, posZ)) {
 						rand = random.nextDouble();
 
-						if (isDefaultStone && SBConfig.spawnDiamonds() && rand < 0.00001) {
+						if (isDefaultStone && SBConfig.spawnDiamonds && rand < 0.00001) {
 							blockId = Block.oreDiamond.blockID;
 							blockMeta = 0;
-						} else if (isDefaultStone && SBConfig.spawnRedstone() && rand < 0.0002) {
+						} else if (isDefaultStone && SBConfig.spawnRedstone && rand < 0.0002) {
 							blockId = Block.oreRedstone.blockID;
 							blockMeta = 0;
-						} else if (isDefaultStone && SBConfig.spawnLapis() && rand < 0.0005) {
+						} else if (isDefaultStone && SBConfig.spawnLapis && rand < 0.0005) {
 							blockId = Block.oreLapis.blockID;
 							blockMeta = 0;
-						} else if (SBConfig.spawnLava() && rand < 0.05) {
+						} else if (SBConfig.spawnLava && !SBConfig.isProjectRedDetected && rand < 0.05) {
 							blockId = Block.lavaStill.blockID;
 							blockMeta = 0;
 						} else {

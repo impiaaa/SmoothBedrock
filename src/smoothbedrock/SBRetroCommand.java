@@ -112,7 +112,7 @@ public class SBRetroCommand extends CommandBase {
 	private void generate(int chunkX, int chunkZ, int dimension, Player player) {
 		World world = MinecraftServer.getServer().worldServerForDimension(dimension);
 
-		if (world.isRemote || !SBConfig.isActive() || world.provider.terrainType == WorldType.FLAT
+		if (world.isRemote || !SBConfig.isActive || world.provider.terrainType == WorldType.FLAT
 				|| !SBConfig.isValidDimension(world)) {
 			return;
 		}
