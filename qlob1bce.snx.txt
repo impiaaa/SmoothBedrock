@@ -1,0 +1,33 @@
+﻿Restructed
+Added SupportedMod Configs - (Inspired by Tconstruct)
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+	deleted:    src/smoothbedrock/client/SBClientProxy.java
+	deleted:    src/smoothbedrock/common/SBServerProxy.java
+	renamed:    src/smoothbedrock/SBConfig.java -> src/smoothbedrock/configs/SBConfig.java
+#
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+	modified:   src/smoothbedrock/SBCore.java
+	modified:   src/smoothbedrock/SBRetroCommand.java
+	modified:   src/smoothbedrock/common/SBPacket.java
+	modified:   src/smoothbedrock/common/SBPacketCoordinates.java
+	modified:   src/smoothbedrock/common/SBPacketHandler.java
+	modified:   src/smoothbedrock/common/SBPacketIds.java
+	modified:   src/smoothbedrock/configs/SBConfig.java
+	modified:   src/smoothbedrock/worldgeneration/SBWorldGeneration.java
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+	src/smoothbedrock/configs/GalactiCraftConfig.java
+	src/smoothbedrock/configs/MineDonaldsConfig.java
+	src/smoothbedrock/configs/TwilightForestConfig.java
+
