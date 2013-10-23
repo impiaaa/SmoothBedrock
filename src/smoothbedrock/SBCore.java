@@ -8,7 +8,6 @@ import smoothbedrock.configs.SBConfig;
 import smoothbedrock.configs.TwilightForestConfig;
 import smoothbedrock.worldgeneration.SBWorldGeneration;
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -58,7 +57,6 @@ public class SBCore
     {
         if (SBConfig.isActive)
         {
-            SBConfig.isProjectRedDetected = SBConfig.usedForProjectRed && (Loader.isModLoaded("ProjRed|Exploration") || Loader.isModLoaded("ProjRed|Core"));
             GameRegistry.registerWorldGenerator(new SBWorldGeneration());
         }
     }

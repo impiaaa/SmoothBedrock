@@ -11,12 +11,12 @@ public class MineDonaldsConfig
 
     public static void read (File directory)
     {
-        File configFile = new File(directory, "");
+        File configFile = new File(directory, "MineDonalds.cfg");
         if (configFile.exists())
         {
             Configuration config = new Configuration(configFile);
             config.load();
-            dimensionId = config.get("", "", -255).getInt();
+            dimensionId = config.get("DimensionID", "Minedonalds Dimension", -255).getInt();
         }
     }
 }

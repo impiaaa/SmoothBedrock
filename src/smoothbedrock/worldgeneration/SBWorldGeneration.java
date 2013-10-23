@@ -27,7 +27,7 @@ public class SBWorldGeneration implements IWorldGenerator
             return;
 
         boolean isDefaultStone = (defaultBlockId == Block.stone.blockID);
-        boolean useCustomSpawn = (isDefaultStone && SBConfig.spawnDiamonds && SBConfig.spawnRedstone && SBConfig.spawnLapis && SBConfig.spawnLava && !SBConfig.isProjectRedDetected);
+        boolean useCustomSpawn = (SBConfig.spawnDiamonds && SBConfig.spawnRedstone && SBConfig.spawnLapis);
         int blockId = defaultBlockId;
         int blockMeta = defaultBlockMeta;
         int posX = 0;
@@ -38,7 +38,6 @@ public class SBWorldGeneration implements IWorldGenerator
         {
             for (int z = 0; z < 16; z++)
             {
-
                 posX = chunkX * 16 + x;
                 posZ = chunkZ * 16 + z;
 
@@ -48,7 +47,7 @@ public class SBWorldGeneration implements IWorldGenerator
                     {
                         if (isBedrock(world, posX, posY, posZ))
                         {
-                            world.setBlock(posX, posY, posZ, defaultBlockId, defaultBlockMeta, 2);
+                            world.setBlock(posX, posY, posZ, defaultBlockId, defaultBlockMeta, 0);
                         }
                     }
                 }
@@ -57,29 +56,21 @@ public class SBWorldGeneration implements IWorldGenerator
                 {
                     if (isBedrock(world, posX, posY, posZ))
                     {
-                        if (useCustomSpawn)
+                        if (useCustomSpawn && isDefaultStone)
                         {
                             rand = random.nextDouble();
-
-                            if (isDefaultStone && SBConfig.spawnDiamonds && rand < 0.00001)
+                            blockMeta = 0;
+                            if (SBConfig.spawnDiamonds && rand < 0.00001)
                             {
                                 blockId = Block.oreDiamond.blockID;
-                                blockMeta = 0;
                             }
-                            else if (isDefaultStone && SBConfig.spawnRedstone && rand < 0.0002)
+                            else if (SBConfig.spawnRedstone && rand < 0.0002)
                             {
                                 blockId = Block.oreRedstone.blockID;
-                                blockMeta = 0;
                             }
-                            else if (isDefaultStone && SBConfig.spawnLapis && rand < 0.0005)
+                            else if (SBConfig.spawnLapis && rand < 0.0005)
                             {
                                 blockId = Block.oreLapis.blockID;
-                                blockMeta = 0;
-                            }
-                            else if (SBConfig.spawnLava && !SBConfig.isProjectRedDetected && rand < 0.05)
-                            {
-                                blockId = Block.lavaStill.blockID;
-                                blockMeta = 0;
                             }
                             else
                             {
@@ -87,18 +78,19 @@ public class SBWorldGeneration implements IWorldGenerator
                                 blockMeta = defaultBlockMeta;
                             }
                         }
-
-                        try
+                        else
                         {
-                            world.setBlock(posX, posY, posZ, blockId, blockMeta, 2);
+                            blockId = defaultBlockId;
+                            blockMeta = defaultBlockMeta;
                         }
-                        catch (Exception ex)
+
+                        if (!world.setBlock(posX, posY, posZ, blockId, blockMeta, 0))
                         {
-                            world.setBlock(posX, posY, posZ, defaultBlockId, defaultBlockMeta, 2);
+
+                            world.setBlock(posX, posY, posZ, defaultBlockId, defaultBlockMeta, 0);
                         }
                     }
                 }
-
             }
         }
     }

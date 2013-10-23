@@ -12,13 +12,20 @@ public class GalactiCraftConfig
 
     public static void read (File directory)
     {
-        File configFile = new File(directory, "");
+        File configFile = new File(directory, "Galacticraft/moon.conf");
         if (configFile.exists())
         {
             Configuration config = new Configuration(configFile);
             config.load();
-            marsDimensionId = config.get("", "", -255).getInt();
-            moonDimensionId = config.get("", "", -255).getInt();
+            moonDimensionId = config.get("dimensions", "Moon Dimension ID", -255).getInt();
+        }
+
+        configFile = new File(directory, "Galacticraft/mars.conf");
+        if (configFile.exists())
+        {
+            Configuration config = new Configuration(configFile);
+            config.load();
+            marsDimensionId = config.get("dimensions", "Mars Dimension ID", -255).getInt();
         }
     }
 }

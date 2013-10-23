@@ -12,21 +12,16 @@ import net.minecraftforge.common.Configuration;
 public class SBConfig
 {
     public static boolean isActive;
-    public static boolean isProjectRedDetected = false;
     public static boolean spawnDiamonds;
-    public static boolean spawnLava;
     public static boolean spawnRedstone;
     public static boolean spawnLapis;
     public static boolean usedForNether;
     public static boolean usedForTwilighForest;
     public static boolean usedForGalacticraft;
     public static boolean usedForMineDonalds;
-    public static boolean usedForProjectRed;
 
     public static void readConfig (Configuration config)
     {
-        registerDimensions();
-
         isActive = config.get("WorldGeneration", "isActive", true, "true, smooths out those annoying bumps of bedrock").getBoolean(true);
 
         usedForNether = config.get("WorldGeneration", "usedForNether", true, "true, applies in the generation of the nether").getBoolean(true);
@@ -37,16 +32,13 @@ public class SBConfig
 
         usedForMineDonalds = config.get("WorldGeneration", "usedForMineDonalds", true, "true, applies in the generation of MineDonalds Dimension").getBoolean(true);
 
-        usedForProjectRed = config.get("WorldGeneration", "usedForProjectRed", true, "if true, the smoothbedrock worldgeneration doesn't spawn additional lava, when ProjectRed is detected")
-                .getBoolean(true);
-
         spawnDiamonds = config.get("WorldGeneration", "spawnDiamonds", true, "true, if diamonds (very low chance) should be generated as bedrock alternative.").getBoolean(true);
-
-        spawnLava = config.get("WorldGeneration", "spawnLava", true, "true, if lava should be generated as bedrock alternative").getBoolean(true);
 
         spawnRedstone = config.get("WorldGeneration", "spawnRedstone", true, "true, if redstone (low chance) should be generated as bedrock alternative.").getBoolean(true);
 
         spawnLapis = config.get("WorldGeneration", "spawnLapis", true, "true, if lapis (low chance) should be generated as bedrock alternative.").getBoolean(true);
+
+        registerDimensions();
 
     }
 
@@ -70,14 +62,17 @@ public class SBConfig
         _dimensionDefaultBlock.put(1, 0);
         _dimensionDefaultBlockMeta.put(1, 0);
 
+        // Twilight Forest support
         if (TwilightForestConfig.dimensionId != -255)
             _dimensions.put(TwilightForestConfig.dimensionId, usedForTwilighForest);
 
+        // GalactiCraft support
         if (GalactiCraftConfig.marsDimensionId != -255)
             _dimensions.put(GalactiCraftConfig.marsDimensionId, usedForGalacticraft);
         if (GalactiCraftConfig.moonDimensionId != -255)
             _dimensions.put(GalactiCraftConfig.moonDimensionId, usedForGalacticraft);
 
+        // MineDonalds support
         if (MineDonaldsConfig.dimensionId != -255)
             _dimensions.put(MineDonaldsConfig.dimensionId, usedForMineDonalds);
     }
@@ -144,7 +139,6 @@ public class SBConfig
     private static int setDimensionValues (World world, int posX, int posZ, int posY)
     {
         _dimensionDefaultBlock.put(world.provider.dimensionId, world.getBlockId(posX, posY, posZ));
-
         _dimensionDefaultBlockMeta.put(world.provider.dimensionId, world.getBlockMetadata(posX, posY, posZ));
 
         return _dimensionDefaultBlock.get(world.provider.dimensionId);
@@ -154,10 +148,8 @@ public class SBConfig
     {
         if (!_dimensionDefaultBlockMeta.containsKey(world.provider.dimensionId))
         {
-
             getDefaultBlockID(world, chunkX, chunkZ);
         }
-
         return _dimensionDefaultBlockMeta.get(world.provider.dimensionId);
     }
 }
