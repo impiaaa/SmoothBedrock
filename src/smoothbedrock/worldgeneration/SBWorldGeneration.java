@@ -1,13 +1,13 @@
 package smoothbedrock.worldgeneration;
 
+import cpw.mods.fml.common.IWorldGenerator;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
+import net.minecraft.world.*;
 import net.minecraft.world.chunk.IChunkProvider;
 import smoothbedrock.configs.SBConfig;
-import cpw.mods.fml.common.IWorldGenerator;
 
 public class SBWorldGeneration implements IWorldGenerator
 {
@@ -26,8 +26,7 @@ public class SBWorldGeneration implements IWorldGenerator
         if (!SBConfig.isValidDimension(world))
             return;
 
-        boolean isDefaultStone = (defaultBlockId == Block.stone.blockID);
-        boolean useCustomSpawn = (SBConfig.spawnDiamonds && SBConfig.spawnRedstone && SBConfig.spawnLapis);
+        boolean useCustomSpawn = (defaultBlockId == Block.stone.blockID) && (SBConfig.spawnDiamonds || SBConfig.spawnRedstone || SBConfig.spawnLapis);
         int blockId = defaultBlockId;
         int blockMeta = defaultBlockMeta;
         int posX = 0;
@@ -56,7 +55,7 @@ public class SBWorldGeneration implements IWorldGenerator
                 {
                     if (isBedrock(world, posX, posY, posZ))
                     {
-                        if (useCustomSpawn && isDefaultStone)
+                        if (useCustomSpawn)
                         {
                             rand = random.nextDouble();
                             blockMeta = 0;
