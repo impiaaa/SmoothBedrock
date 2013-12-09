@@ -42,7 +42,7 @@ public class SBWorldGeneration implements IWorldGenerator
 
                 if (isNether)
                 {
-                    for (int posY = 128; posY > 121; posY--)
+                    for (int posY = 127; posY > 121; posY--)
                     {
                         if (isBedrock(world, posX, posY, posZ))
                         {
